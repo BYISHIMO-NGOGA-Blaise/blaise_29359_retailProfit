@@ -10,26 +10,27 @@ The screenshots show the **Final Practicum Project - PL/SQL (Topic Selection)** 
 | Student ID | `29359` |
 | Full name | `BYISHIMO NGOGA Blaise` |
 | Date registered | Leave blank — automatic |
-| Domain | `Banking and Finance` |
-| Project title | `CampaignGuard: Bank Campaign Contact Compliance and Conversion Tracker` |
-| Project description | `Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. This project will build an Oracle database with PL/SQL functions, procedures, and triggers that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance on a live dashboard.` |
-| Data source (link) | `https://doi.org/10.24432/C5K306` |
-| Planned innovation | `Analytics dashboard (Power BI) connected live to the Oracle database` |
-| 3 keywords | `bank campaign, consent, contact frequency` |
-| GitHub repository link | `https://github.com/BYISHIMO-NGOGA-Blaise/blaise_29359_campaignGuard` |
+| Domain | `Business and Entrepreneurship` |
+| Project title | `Smart Business Management & Digital Commerce Platform: Order Fulfillment and Inventory Control` |
+| Project description | `Online retailers struggle to keep orders, stock, cancellations, and fulfillment status consistent across spreadsheets and sales channels. This causes overselling, delayed dispatch, unreconciled returns, and inaccurate stock records. This project will build an Oracle database with PL/SQL functions, procedures, packages, and triggers that record customers, products, orders, order lines, inventory, stock movements, shipments, and returns; check and reserve stock before order confirmation; block overselling; restore stock on cancellations and returns; and produce an audit trail. A live Power BI dashboard will show order volume, stock health, fulfillment status, returns, and product/country performance.` |
+| Data source (link) | `https://doi.org/10.24432/C5CG6D` |
+| Planned innovation | `Database-level stock reservation and return reconciliation engine with an audit trail, plus a live Power BI analytics dashboard` |
+| 3 keywords | `digital commerce, order fulfillment, inventory control` |
+| GitHub repository link | `https://github.com/BYISHIMO-NGOGA-Blaise/blaise_29359_smartCommerce` |
 
 ## Before pasting
 
 1. Read the **Instructions** tab.
-2. Check all four group tabs for `bank campaign`, `consent`, `telemarketing`, and `contact frequency` to confirm the idea is not already taken.
-3. Enter the row in **MONDAY GRP I**, first empty row only.
-4. Type your **Gmail first**; the sheet may use it to auto-fill the date.
-5. Create the GitHub repository **before** pasting the link. Name it `blaise_29359_campaignGuard`, make it public, and paste the URL.
-6. Do not edit another student's row.
+2. Check all four group tabs for `digital commerce`, `e-commerce`, `online retail`, `order fulfillment`, `inventory`, `stock`, and `returns`.
+3. Note the closest existing topics: `Small Business sales and profit tracking system` (Monday) and `CarTracker` (Tuesday). This project is different because it focuses on **online order fulfillment, stock reservation, oversell prevention, and return reconciliation**, not sales/profit tracking or used-car sales.
+4. Enter the row in **MONDAY GRP I**, first empty row only.
+5. Type your **Gmail first**; the sheet may use it to auto-fill the date.
+6. Create or rename the GitHub repository **before** pasting the link. It must be public and named `blaise_29359_smartCommerce`.
+7. Do not edit another student's row.
 
 ## Repository name
 
-`blaise_29359_campaignGuard`
+`blaise_29359_smartCommerce`
 
 ## Deadline
 

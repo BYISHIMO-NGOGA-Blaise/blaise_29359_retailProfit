@@ -13,5 +13,5 @@ __pycache__/
 # Local environment and secrets
 .env
 
-# Old dataset replaced by the UCI Bank Marketing data
+# Legacy working file retained locally
 data/sacco_loan.xlsx

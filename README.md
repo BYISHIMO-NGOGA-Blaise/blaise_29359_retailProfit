@@ -1,4 +1,6 @@
-# CampaignGuard — Bank Campaign Contact Compliance and Conversion Tracker
+# SmartCommerce — Smart Business Management & Digital Commerce Platform
+
+**Order Fulfillment and Inventory Control**
 
 **Student:** BYISHIMO NGOGA Blaise — **29359**  
 **Course:** INSY 8311 — Database Development with PL/SQL  
@@ -8,48 +10,60 @@
 
 ## Problem statement
 
-Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. CampaignGuard will be an Oracle database with PL/SQL rules that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance by customer segment.
+Online retailers process orders, stock, cancellations, and deliveries across spreadsheets, marketplaces, and disconnected sales channels. When stock and order records are not updated together, businesses oversell products, dispatch orders late, lose track of returns, and report inaccurate stock. SmartCommerce will be an Oracle database with PL/SQL rules that record customers, products, orders, order lines, inventory, stock movements, shipments, and returns; check and reserve stock before an order is confirmed; block overselling; restore stock when an order is cancelled or a product is returned; and keep an auditable trail of every stock change.
 
 ## Objectives
 
-**Main objective:** Design and implement an Oracle database with PL/SQL that enforces bank campaign contact compliance and tracks conversion performance.
+**Main objective:** Design and implement an Oracle database with PL/SQL that controls order fulfillment and inventory for a digital commerce business.
 
 **Specific objectives:**
 
-1. Model customers, campaigns, consent, contact attempts, conversions, contact policies, and audit events in third normal form (3NF).
-2. Load and validate the UCI Bank Marketing dataset, handle "unknown" values, derive surrogate customer IDs, and reconstruct a chronological contact sequence.
-3. Develop PL/SQL functions, procedures, cursors, packages, and triggers that check consent, enforce frequency caps and permitted contact windows, block non-compliant attempts, and write audit records.
-4. Build a live Power BI dashboard connected to Oracle views that shows conversion rates by segment, contact frequency, blocked attempts, and consent status.
+1. Model customers, products, orders, order lines, inventory, stock movements, shipments, returns, return lines, and audit events in third normal form (3NF).
+2. Load and validate the UCI Online Retail II dataset, remove non-product adjustment lines, preserve cancellations as returns, handle missing customer IDs, and derive orders, order lines, and returns.
+3. Develop PL/SQL functions, procedures, cursors, packages, and triggers that check available stock, reserve stock, prevent overselling, calculate order totals, process cancellations and returns, restore stock, and write audit records.
+4. Build a live Power BI dashboard connected to Oracle views that shows order volume, revenue, stock health, fulfillment status, return rates, and product/country performance.
 5. Document the system and demonstrate it live in the final presentation.
 
 ## Data source
 
-- **Dataset:** *Bank Marketing*
-- **Authors:** Sérgio Moro, Paulo Rita, and Paulo Cortez (2014)
-- **Repository:** UCI Machine Learning Repository — https://doi.org/10.24432/C5K306
-- **File used:** `bank-additional-full.csv` from `bank-additional.zip`
+- **Dataset:** *Online Retail II*
+- **Author:** Daqing Chen (2012)
+- **Repository:** UCI Machine Learning Repository — https://doi.org/10.24432/C5CG6D
+- **File used:** `online_retail_II.xlsx` (sheets: `Year 2009-2010` and `Year 2010-2011`)
 - **Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0)
-- **Size:** 41,188 anonymised records × 21 columns
-- **Period:** May 2008–November 2010, ordered by contact date
-- **Target:** `y` — 4,640 subscribed (11.3%) and 36,548 did not subscribe (88.7%)
-- **Key fields:** `age`, `job`, `marital`, `education`, `default`, `housing`, `loan`, `contact`, `month`, `day_of_week`, `duration`, `campaign`, `pdays`, `previous`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`, `euribor3m`, `nr.employed`, `y`
-- **Privacy:** no names, phone numbers, or national ID numbers are present.
-- **Local copy:** `data/bank-additional-full.csv`
+- **Size:** 1,067,371 transaction lines × 8 columns (45.6 MB)
+- **Period:** 1 December 2009 – 9 December 2011
+- **Coverage:** 53,628 invoices, 5,942 customers, 5,304 stock codes, 43 countries
+- **Revenue:** about £19.29 million gross across both years, including cancellations
+- **Key fields:** `Invoice`, `StockCode`, `Description`, `Quantity`, `InvoiceDate`, `Price`, `Customer ID`, `Country`
+- **Privacy:** the data is anonymised; there are no names, addresses, phone numbers, or national ID numbers
+- **Local copy:** `data/online_retail_II.xlsx`
 
-The dataset has no customer IDs, exact dates, or consent flags. In Phase II I will assign a surrogate `customer_id` to each record, reconstruct a chronological contact sequence from the file order and the month column, and create a `consent` table seeded with documented simulated consent values for demonstration. The `duration` field is known only after a call, so it will not be used to decide whether a customer may be contacted.
+### Audit findings
+
+- 525,461 lines in `Year 2009-2010` and 541,910 lines in `Year 2010-2011`.
+- 243,007 lines (22.8%) have no `Customer ID`; these will be treated as guest or unidentified orders and excluded from customer-level analysis.
+- 4,382 lines have no `Description`; these will be reviewed during cleaning.
+- 22,950 lines have a negative quantity; 8,292 invoices (19,494 lines) are cancellation invoices whose numbers begin with `C`. These will become return records, not deleted sales.
+- 6,202 lines have a zero price and 5 lines have a negative price; these will be flagged and excluded from revenue calculations.
+- Codes such as `POST`, `DOT`, `M`, `BANK CHARGES`, and `AMAZONFEE` are postage, adjustment, or service lines, not physical products. They will be excluded from product-level inventory analysis.
+- The dataset has no opening stock, supplier purchase records, cost prices, shipment dates, order status, or sales channel. In Phase II, orders will be derived from invoices, order lines from transaction rows, and returns from cancellations/negative quantities. Opening inventory, shipment status, and channel will be documented workflow fields or simulation values, not claims about the source data.
 
 ## Innovation
 
-**Option:** Analytics dashboard  
+**Option:** Analytics dashboard with a database-level rule engine  
 **Tool:** Power BI, connected live to the Oracle database.
 
-Power BI will read Oracle views backed by PL/SQL functions and show:
+The main innovation is a **stock reservation and return reconciliation engine** inside Oracle PL/SQL. Before an order is confirmed, the system checks available stock (`quantity_on_hand - quantity_reserved`), reserves the required quantity, and blocks the confirmation if any line cannot be fulfilled. Cancellations release reservations; returns restore stock only when the returned item is marked for restocking. Every movement is written to `stock_movements` and `audit_log`, so the business can trace why stock changed.
 
-- conversion rate by job, education, channel, and contact frequency;
-- customers contacted above the policy limit;
-- blocked attempts by reason (no consent, frequency cap, outside window);
-- campaign performance over time and by customer segment;
-- consent status and withdrawal trends.
+Power BI will read Oracle views backed by PL/SQL and show:
+
+- order volume, revenue, and average order value over time;
+- stock on hand, reserved stock, available stock, and low-stock products;
+- orders by fulfillment status and dispatch delay;
+- return rate by product, customer, and country;
+- top products and countries by revenue;
+- stock exceptions, blocked confirmations, and audit events.
 
 Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
@@ -57,43 +71,49 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 | Table | Purpose |
 |---|---|
-| `customers` | Anonymised customer profile and contact preferences. |
-| `campaigns` | Campaign name, product, dates, target segment, status, and contact policy. |
-| `consent` | Customer consent per channel, consent date, source, expiry date, and withdrawal date. |
-| `contact_attempts` | Every attempted contact, channel, timestamp, outcome, duration, blocked flag, and block reason. |
-| `conversions` | Term-deposit subscription outcome linked to the successful contact attempt. |
-| `contact_policies` | Maximum contacts per day/week, permitted contact window, and channel rules. |
-| `market_conditions` | Economic indicators by period for campaign timing analysis. |
-| `audit_log` | Every consent change, blocked attempt, approval, and sensitive update with user, timestamp, and reason. |
-| `jobs` | Lookup table for occupation categories. |
-| `education_levels` | Lookup table for education categories. |
-| `contact_channels` | Lookup table for cellular, telephone, and other channels. |
-| `campaign_outcomes` | Lookup table for contact and conversion outcomes. |
+| `customers` | Anonymised customer identifier, country, first order date, and derived segment. |
+| `products` | Product stock code, description, current unit price, product type, and active status. |
+| `orders` | Invoice/order header, customer, order date, channel, status, and total amount. |
+| `order_lines` | Product, quantity, unit price, line total, and line status for each order. |
+| `inventory` | Quantity on hand, quantity reserved, reorder level, and last update per product. |
+| `stock_movements` | Every opening, sale, return, reservation, release, and adjustment movement. |
+| `shipments` | Carrier, dispatch date, delivery date, tracking number, and shipment status. |
+| `returns` | Return header linked to an order, return date, reason, status, and refund amount. |
+| `return_lines` | Returned product, quantity, condition, and restock decision. |
+| `audit_log` | Every critical insert, update, status change, and stock adjustment with user, timestamp, and reason. |
+| `order_status_history` | Chronological status changes for each order. |
+| `channels` | Lookup table for online, phone, marketplace, and wholesale channels. |
 
 ### Key relationships
 
-- One `customer` has many `consent` records and many `contact_attempts`.
-- One `campaign` has many `contact_attempts` and many `conversions`.
-- One successful `contact_attempt` can produce one `conversion`.
-- `contact_policies` are applied by channel and campaign.
-- `audit_log` records changes to consent, contact attempts, and conversions.
+- One `customer` has many `orders`.
+- One `order` has many `order_lines` and one or more `shipments`.
+- One `product` has one `inventory` record and many `stock_movements`.
+- One `order` can have many `returns`, and one `return` has many `return_lines`.
+- One `order_line` can be referenced by one or more `return_lines`.
+- `order_status_history` and `audit_log` record changes over time.
 
 ## Planned PL/SQL features
 
 | Feature | Planned use |
 |---|---|
-| Function `fn_contacts_last_n_days` | Counts a customer's contacts in the last 1, 7, or 30 days by channel. |
-| Function `fn_is_contact_allowed` | Returns an allowed/blocked status with a reason after checking consent, frequency cap, contact window, and campaign status. |
-| Procedure `prc_set_consent` | Records consent, renewal, or withdrawal and writes an audit entry. |
-| Procedure `prc_log_contact_attempt` | Calls the compliance check, inserts the attempt, or stores a blocked attempt with a reason. |
-| Procedure `prc_record_conversion` | Records a successful subscription and updates campaign metrics. |
-| Cursor `cur_high_frequency_customers` | Lists customers contacted above the policy threshold for review. |
-| Package `pkg_campaign_compliance` | Groups the consent, frequency, window, and conversion logic. |
-| Trigger `trg_contact_attempt_guard` | `BEFORE INSERT` trigger that blocks non-compliant contact attempts. |
-| Trigger `trg_audit_consent` | Logs every consent insert, update, and withdrawal. |
-| Views `vw_campaign_conversion`, `vw_blocked_attempts`, `vw_contact_frequency`, `vw_consent_status` | Feed the Power BI dashboard. |
-| Exception handling | Custom errors for missing consent, frequency-cap breach, outside-window contact, and closed campaign. |
-| Scheduler job | Expires consents and refreshes campaign summary views nightly. |
+| Function `fn_available_stock` | Returns `quantity_on_hand - quantity_reserved` for a product. |
+| Function `fn_order_total` | Calculates an order total from its order lines. |
+| Procedure `prc_add_order_line` | Validates product, quantity, and price; inserts a line; updates the order total. |
+| Procedure `prc_confirm_order` | Checks and reserves stock for every line; blocks the order if stock is insufficient. |
+| Procedure `prc_cancel_order` | Releases reservations and restores stock when an order is cancelled before dispatch. |
+| Procedure `prc_process_return` | Validates the return quantity, records the return, and restocks the product when approved. |
+| Procedure `prc_adjust_stock` | Records cycle-count or damage adjustments with a mandatory reason. |
+| Cursor `cur_low_stock_products` | Lists products at or below their reorder level. |
+| Cursor `cur_high_return_products` | Lists products whose return rate exceeds a configurable threshold. |
+| Package `pkg_smartcommerce` | Groups order, inventory, shipment, and return logic. |
+| Trigger `trg_order_line_bi` | Validates quantity and price and calculates the line total before insert. |
+| Trigger `trg_stock_movement_ai` | Updates `inventory.quantity_on_hand` after each stock movement. |
+| Trigger `trg_order_status_biu` | Enforces valid order status transitions and writes status history. |
+| Trigger `trg_audit_stock` | Writes an audit record for every stock and order-status change. |
+| Views `vw_order_fulfillment`, `vw_stock_health`, `vw_product_performance`, `vw_return_summary`, `vw_country_sales` | Feed the Power BI dashboard. |
+| Exception handling | Custom errors for insufficient stock, invalid return quantity, invalid status transition, and inactive product. |
+| Scheduler job | Releases expired reservations and refreshes summary views nightly. |
 
 ## Repository structure
 
@@ -102,7 +122,7 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 ├── README.md
 ├── data/
 │   ├── README.md
-│   └── bank-additional-full.csv
+│   └── online_retail_II.xlsx
 ├── docs/
 │   ├── proposal/
 │   │   └── registration_row.md
@@ -114,7 +134,7 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 ## Phase 0 checklist
 
-- [x] Topic selected in the banking/finance area.
+- [x] Topic selected in the business and digital commerce area.
 - [x] At least 6 credible sources, including a dataset.
 - [x] Real dataset downloaded and audited.
 - [ ] Topic registered on the instructor's Google Sheet.
@@ -124,18 +144,18 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 ## References
 
-Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en
+Chen, D. (2012). *Online Retail II* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D
 
-Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. https://doi.org/10.5120/14852-3218
+Chen, D., Sain, S. L., & Guo, K. (2012). Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining. *Journal of Database Marketing & Customer Strategy Management, 19*(3), 197–208. https://doi.org/10.1057/dbm.2012.17
 
-European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en
-
-Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. https://doi.org/10.1016/j.dss.2014.03.001
-
-Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306
+Hübner, A., Kuhn, H., & Wollenburg, J. (2016). Last mile fulfilment and distribution in omni-channel grocery retailing: A strategic planning framework. *International Journal of Retail & Distribution Management, 44*(3), 228–247. https://doi.org/10.1108/IJRDM-11-2014-0154
 
 Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html
 
-Salesforce. (n.d.). *Financial Services Cloud*. https://www.salesforce.com/financialservices/
+Raman, A., DeHoratius, N., & Ton, Z. (2001). Execution: The missing link in retail operations. *California Management Review, 43*(3), 136–152. https://doi.org/10.2307/41166093
 
-World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. https://www.worldbank.org/en/publication/globalfindex
+Shopify. (n.d.). *Shopify: Ecommerce platform*. https://www.shopify.com/
+
+UNCTAD. (2021). *Estimates of global e-commerce 2019 and preliminary assessment of COVID-19 impact on online retail 2020* (UNCTAD Technical Notes on ICT for Development No. 18). https://unctad.org/system/files/official-document/tn_unctad_ict4d18_en.pdf
+
+World Bank. (2024). *Digital progress and trends report 2023*. https://www.worldbank.org/en/publication/digital-progress-and-trends-report

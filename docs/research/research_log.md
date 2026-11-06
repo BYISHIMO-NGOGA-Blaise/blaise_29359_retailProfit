@@ -7,24 +7,26 @@
 
 ## Proposed project
 
-**Title:** CampaignGuard — Bank Campaign Contact Compliance and Conversion Tracker
+**Title:** Smart Business Management & Digital Commerce Platform: Order Fulfillment and Inventory Control
 
-**Problem statement:** Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. CampaignGuard will be an Oracle database with PL/SQL rules that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance by customer segment.
+**Short name:** SmartCommerce
 
-**Planned innovation:** An interactive Power BI dashboard connected live to Oracle views, showing conversion rates by job, education, channel, and contact frequency; blocked attempts; consent status; and campaign performance over time.
+**Problem statement:** Online retailers process orders, stock, cancellations, and deliveries across spreadsheets, marketplaces, and disconnected sales channels. When stock and order records are not updated together, businesses oversell products, dispatch orders late, lose track of returns, and report inaccurate stock. SmartCommerce will be an Oracle database with PL/SQL rules that record customers, products, orders, order lines, inventory, stock movements, shipments, and returns; check and reserve stock before an order is confirmed; block overselling; restore stock when an order is cancelled or a product is returned; and keep an auditable trail of every stock change.
+
+**Planned innovation:** A database-level stock reservation and return reconciliation engine with an audit trail, plus an interactive Power BI dashboard connected live to Oracle views. The dashboard will show order volume, revenue, stock health, fulfillment status, return rates, and product/country performance.
 
 ## Research log
 
 | # | Source (APA) | Type | Link | Key finding | Gap it shows |
 |---|---|---|---|---|---|
-| 1 | Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. | Research paper | https://doi.org/10.1016/j.dss.2014.03.001 | Uses 41,188 records from a Portuguese bank's telephone campaigns (May 2008–November 2010) and shows that customer, campaign, and economic variables can predict term-deposit subscription. Call duration, previous campaign outcome, and economic indicators are strong predictors. | The study is a predictive modelling exercise. It does not provide an operational database that enforces consent, contact-frequency limits, or permitted contact windows, nor an auditable contact log. |
-| 2 | Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). | Research paper | https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en | Conversion falls from 13.19% for customers receiving 1–2 calls to 10.34% for 3–4 calls and 6.41% for 5 or more calls. The authors recommend two calls as a practical operational limit for most customers and a third call only for high-probability prospects. | Banks need a database-level frequency cap and a record of blocked over-contact attempts. A prediction model alone does not enforce the limit or preserve an audit trail. |
-| 3 | Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. | Research paper | https://doi.org/10.5120/14852-3218 | Compares MLPNN, TAN, logistic regression, and C5.0 on real bank deposit-subscription data. The models can identify the customer characteristics that affect campaign success. | The focus is on comparing classifiers, not on operational campaign governance. The paper does not model consent, contact windows, frequency policies, or audit requirements. |
-| 4 | European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. | Report / regulatory guideline | https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en | Consent must be freely given, specific, informed, and unambiguous. Silence, pre-ticked boxes, and inactivity do not constitute consent, and consent can be withdrawn. | Banks need a database-level consent register and an audit trail that can prove when consent was given, for which channel, and when it was withdrawn. |
-| 5 | World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. | Report / statistic | https://www.worldbank.org/en/publication/globalfindex | 76% of adults worldwide had an account in 2021, up from 68% in 2017; in Sub-Saharan Africa, 55% of adults had an account, with mobile money driving much of the growth. | As account ownership and outreach grow, banks run more outbound campaigns. This increases the risk of non-compliant contact and makes a consent/frequency audit system more important. |
-| 6 | Salesforce. (n.d.). *Financial Services Cloud*. | Existing system | https://www.salesforce.com/financialservices/ | A commercial banking CRM that provides customer profiles, campaign management, analytics, and consent/preference management across the Salesforce platform. | It is a proprietary full-suite platform. Public materials do not expose a small, open, database-level PL/SQL rule layer that a small bank or a student project can inspect, adapt, and audit. |
-| 7 | Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. | Dataset | https://doi.org/10.24432/C5K306 | 41,188 anonymised records and 20 input features from a Portuguese bank's phone campaigns, including customer demographics, contact channel, campaign contacts, previous outcomes, and economic indicators. Licensed CC BY 4.0. | The dataset has no customer IDs, exact dates, or consent flags. The project must derive surrogate customer IDs and a chronological contact sequence, and add consent/policy tables with a documented simulation for Phase II. |
-| 8 | Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. | Technical source | https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html | Oracle triggers are stored PL/SQL units that fire automatically on specified DML events. They can enforce complex business rules and security checks inside the database. | Not a gap: this is the technical basis. The project will use `BEFORE INSERT` triggers on contact attempts to enforce consent, frequency caps, and contact windows, and to write audit records. |
+| 1 | Chen, D., Sain, S. L., & Guo, K. (2012). Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining. *Journal of Database Marketing & Customer Strategy Management, 19*(3), 197–208. | Research paper | https://doi.org/10.1057/dbm.2012.17 | Uses the same UK online retail transaction data to segment customers with RFM, k-means clustering, and decision-tree induction. The study shows that small online retailers often lack the customer-centric business intelligence needed to use their transaction data effectively. | The focus is customer segmentation and marketing, not operational order fulfillment, stock reservation, return reconciliation, or database-level inventory rules. |
+| 2 | Raman, A., DeHoratius, N., & Ton, Z. (2001). Execution: The missing link in retail operations. *California Management Review, 43*(3), 136–152. | Research paper | https://doi.org/10.2307/41166093 | In one leading retailer, 65% of inventory records were inaccurate; at another, misplaced stock prevented one in six customers from finding products that were available. These execution problems reduced profits by more than 10%. | The paper is a managerial study of inventory record inaccuracy. It does not provide a database-level mechanism that reserves stock, prevents overselling, or audits every stock movement. |
+| 3 | Hübner, A., Kuhn, H., & Wollenburg, J. (2016). Last mile fulfilment and distribution in omni-channel grocery retailing: A strategic planning framework. *International Journal of Retail & Distribution Management, 44*(3), 228–247. | Research paper | https://doi.org/10.1108/IJRDM-11-2014-0154 | Omni-channel fulfilment requires integrated back-end fulfilment (warehouse and in-store picking) and last-mile distribution. The authors develop a planning framework that links order fulfilment design choices to retailer capabilities and customer behaviour. | The framework is strategic and grocery-specific. It does not implement an operational order, inventory, shipment, and returns database for a small digital retailer. |
+| 4 | UNCTAD. (2021). *Estimates of global e-commerce 2019 and preliminary assessment of COVID-19 impact on online retail 2020* (UNCTAD Technical Notes on ICT for Development No. 18). | Report / statistic | https://unctad.org/system/files/official-document/tn_unctad_ict4d18_en.pdf | Global e-commerce sales reached about $26.7 trillion in 2019, including $4.9 trillion in B2C sales. Online retail’s share of total retail sales rose from 16% to 19% in 2020, and about 1.48 billion people shopped online in 2019. | The report measures the scale of e-commerce but does not address how a small retailer should control stock, orders, cancellations, and returns in an operational database. |
+| 5 | World Bank. (2024). *Digital progress and trends report 2023*. | Report / statistic | https://www.worldbank.org/en/publication/digital-progress-and-trends-report | Business digitalization is uneven. Between April 2020 and December 2022, the share of micro firms investing in digital solutions doubled from 10% to 20%, while large firms rose from 20% to 60%. Many small and medium enterprises in lower-income countries still lack a computer or internet connection. | The report shows a digital divide but does not provide an affordable, inspectable order and inventory system that small retailers can adapt. |
+| 6 | Shopify. (n.d.). *Shopify: Ecommerce platform*. | Existing system | https://www.shopify.com/ | Shopify provides online storefronts, order management, inventory tracking, fulfillment, returns, and analytics in one commercial platform. | It is a proprietary subscription platform. Public materials do not expose a small, open, database-level PL/SQL rule layer that a small retailer or a student project can inspect, adapt, and audit. |
+| 7 | Chen, D. (2012). *Online Retail II* [Data set]. UCI Machine Learning Repository. | Dataset | https://doi.org/10.24432/C5CG6D | 1,067,371 transaction lines and 8 columns from a UK-based online retailer, covering 1 December 2009 to 9 December 2011. The data includes 53,628 invoices, 5,942 customers, 5,304 stock codes, and 43 countries. Licensed CC BY 4.0. | The dataset has no opening stock, supplier purchase records, cost prices, shipment dates, order status, or sales channel. Orders and returns must be derived from invoices and negative quantities, and opening inventory and shipment status must be documented workflow or simulation values. |
+| 8 | Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. | Technical source | https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html | Oracle triggers are stored PL/SQL units that fire automatically on specified DML events. They can enforce complex business rules and security checks inside the database. | Not a gap: this is the technical basis. The project will use triggers to validate order lines, update inventory after stock movements, enforce status transitions, and write audit records. |
 
 ## Source mix check
 
@@ -39,50 +41,53 @@
 
 ## Dataset audit note
 
-I downloaded and inspected the UCI Bank Marketing dataset on 6 November 2026. The file used is `bank-additional-full.csv` from `bank-additional.zip`.
+I downloaded and inspected the UCI Online Retail II dataset on 6 November 2026. The file is `online_retail_II.xlsx` and contains two sheets: `Year 2009-2010` and `Year 2010-2011`.
 
-- **Size:** 41,188 data rows × 21 columns (5.8 MB).
+- **Size:** 1,067,371 data rows × 8 columns (45.6 MB); 525,461 rows in the first sheet and 541,910 in the second.
 - **Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0).
-- **Period:** May 2008–November 2010, ordered by contact date.
-- **Target variable:** `y` — 4,640 subscribed (11.3%) and 36,548 did not subscribe (88.7%). This is an imbalanced target.
-- **Unknown values:** `default` 8,597; `education` 1,731; `housing` 990; `loan` 990; `job` 330; `marital` 80. "unknown" is the missing-value marker; there are no blank cells.
-- **Contact channel:** cellular 26,144; telephone 15,044.
-- **Current-campaign contacts:** minimum 1, maximum 56, average 2.57; 7,635 records have more than 3 contacts and 3,385 have more than 5.
-- **Useful fields for this project:** `age`, `job`, `marital`, `education`, `default`, `housing`, `loan`, `contact`, `month`, `day_of_week`, `duration`, `campaign`, `pdays`, `previous`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`, `euribor3m`, `nr.employed`, `y`.
-- **Leakage note:** `duration` is known only after the call, so it must not be used to decide whether a customer may be contacted. It will be used only for post-call analysis.
-- **No personal identifiers** were found (no names, phone numbers, or national ID numbers).
-- **Limitations:** no customer ID, exact date, or consent flag. In Phase II I will assign a surrogate `customer_id` to each record, reconstruct a chronological contact sequence from the file order and the month column, and create a `consent` table seeded with documented simulated consent values for demonstration.
+- **Period:** 1 December 2009 to 9 December 2011.
+- **Coverage:** 53,628 unique invoices, 5,942 customers, 5,304 stock codes, and 43 countries.
+- **Revenue:** about £19,287,250.57 gross, calculated as `Quantity × Price` and including cancellations. Cancellation lines account for about -£1,526,667.86.
+- **Missing values:** `Customer ID` is missing on 243,007 lines (22.8%); `Description` is missing on 4,382 lines.
+- **Cancellations and returns:** 22,950 lines have a negative quantity. There are 8,292 cancellation invoices (19,494 lines) whose invoice numbers begin with `C`. These will be preserved as return records instead of being deleted.
+- **Price quality:** 6,202 lines have a zero price and 5 lines have a negative price. These will be flagged and excluded from revenue calculations.
+- **Non-product lines:** stock codes such as `POST`, `DOT`, `M`, `BANK CHARGES`, and `AMAZONFEE` are postage, adjustment, or service lines. They will be excluded from product-level inventory analysis.
+- **Privacy:** the dataset is anonymised. There are no names, addresses, phone numbers, or national ID numbers.
+- **Limitations:** the source has no opening stock, supplier purchase records, cost prices, shipment dates, order status, or sales channel. In Phase II I will derive orders from invoices, order lines from transaction rows, and returns from cancellations/negative quantities. Opening inventory, shipment status, and channel will be documented workflow fields or simulation values, not claims about the source data.
 
 ## Search trail
 
 The sources above were found through Google Scholar and general web search, then verified by opening the source pages or PDFs:
 
-- `bank telemarketing conversion contact frequency research paper`
-- `bank telemarketing contact fatigue optimal contact threshold`
-- `UCI Bank Marketing dataset 222`
-- `GDPR consent marketing guidelines EDPB`
-- `World Bank Global Findex 2021 account ownership`
-- `existing bank CRM campaign consent management features`
+- `online retail order fulfillment inventory research paper`
+- `retail inventory record inaccuracy Raman DeHoratius Ton`
+- `omni-channel last mile fulfilment Hübner Kuhn Wollenburg`
+- `UNCTAD global e-commerce estimates 2019 online retail 2020`
+- `World Bank Digital Progress and Trends Report 2023 business digitalization`
+- `UCI Online Retail II dataset 502`
+- `Shopify order management inventory fulfillment returns`
 - `Oracle Database 19c Using Triggers documentation`
 
 ## Problem justification (synthesis)
 
-The evidence points to a practical gap. Bank telemarketing can predict which customers are likely to subscribe, but prediction is not enough: repeated calls quickly reduce conversion, and regulators require explicit, withdrawable consent. Existing commercial CRM suites offer campaign and consent features, but they are large proprietary products. There is little evidence of a small, open, database-level rule engine that (a) checks consent and contact policy before a call, (b) enforces a frequency cap and permitted contact window, (c) blocks and logs non-compliant attempts, and (d) keeps an auditable trail. CampaignGuard addresses that gap with Oracle PL/SQL functions, procedures, cursors, packages, triggers, and an audit log, plus a live Power BI dashboard for campaign managers.
+The evidence points to a practical gap. E-commerce is large and still growing, and small retailers are digitising, but many still run orders, stock, cancellations, and returns on spreadsheets or disconnected tools. Research shows that inventory records are often inaccurate and that omni-channel fulfilment is complex. Commercial platforms such as Shopify solve parts of the problem, but they are proprietary subscription products and do not expose a small, open, database-level rule layer that a small retailer or a student project can inspect and adapt.
+
+SmartCommerce addresses that gap with Oracle PL/SQL. Before an order is confirmed, the system checks available stock, reserves the required quantity, and blocks the confirmation if any line cannot be fulfilled. Cancellations release reservations; approved returns restore stock only when the item is marked for restocking. Every movement is written to `stock_movements` and `audit_log`, so the business can trace why stock changed. A live Power BI dashboard adds operational visibility. The word “smart” in this project refers to rule-based automation and alerts, not machine learning.
 
 ## Full APA references
 
-Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en
+Chen, D. (2012). *Online Retail II* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D
 
-Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. https://doi.org/10.5120/14852-3218
+Chen, D., Sain, S. L., & Guo, K. (2012). Data mining for the online retail industry: A case study of RFM model-based customer segmentation using data mining. *Journal of Database Marketing & Customer Strategy Management, 19*(3), 197–208. https://doi.org/10.1057/dbm.2012.17
 
-European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en
-
-Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. https://doi.org/10.1016/j.dss.2014.03.001
-
-Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306
+Hübner, A., Kuhn, H., & Wollenburg, J. (2016). Last mile fulfilment and distribution in omni-channel grocery retailing: A strategic planning framework. *International Journal of Retail & Distribution Management, 44*(3), 228–247. https://doi.org/10.1108/IJRDM-11-2014-0154
 
 Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html
 
-Salesforce. (n.d.). *Financial Services Cloud*. https://www.salesforce.com/financialservices/
+Raman, A., DeHoratius, N., & Ton, Z. (2001). Execution: The missing link in retail operations. *California Management Review, 43*(3), 136–152. https://doi.org/10.2307/41166093
 
-World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. https://www.worldbank.org/en/publication/globalfindex
+Shopify. (n.d.). *Shopify: Ecommerce platform*. https://www.shopify.com/
+
+UNCTAD. (2021). *Estimates of global e-commerce 2019 and preliminary assessment of COVID-19 impact on online retail 2020* (UNCTAD Technical Notes on ICT for Development No. 18). https://unctad.org/system/files/official-document/tn_unctad_ict4d18_en.pdf
+
+World Bank. (2024). *Digital progress and trends report 2023*. https://www.worldbank.org/en/publication/digital-progress-and-trends-report
