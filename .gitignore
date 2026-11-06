@@ -1,0 +1,14 @@
+# Office temporary files
+~$*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Local environment and secrets
+.env
