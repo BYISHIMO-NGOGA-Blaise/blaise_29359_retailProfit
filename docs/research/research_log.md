@@ -7,24 +7,24 @@
 
 ## Proposed project
 
-**Title:** SACCO Collateral and Guarantor Exposure Monitor (SCGEM)
+**Title:** CampaignGuard — Bank Campaign Contact Compliance and Conversion Tracker
 
-**Problem statement:** SACCOs rely heavily on guarantors and collateral, but coverage is often tracked in spreadsheets, paper files, or not at all. Credit officers cannot easily see whether a loan is adequately covered, whether a guarantor is over-exposed, or why an approval was rejected. This project will build an Oracle database with PL/SQL rules that compute guarantee and collateral coverage, block under-covered loan approvals, and log every decision for audit.
+**Problem statement:** Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. CampaignGuard will be an Oracle database with PL/SQL rules that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance by customer segment.
 
-**Planned innovation:** An interactive Power BI dashboard connected live to the Oracle database, showing guarantee coverage, default rates by collateral type, and high-risk/under-covered loans.
+**Planned innovation:** An interactive Power BI dashboard connected live to Oracle views, showing conversion rates by job, education, channel, and contact frequency; blocked attempts; consent status; and campaign performance over time.
 
 ## Research log
 
 | # | Source (APA) | Type | Link | Key finding | Gap it shows |
 |---|---|---|---|---|---|
-| 1 | Jack, W., Kremer, M., de Laat, J., & Suri, T. (2016). *Borrowing requirements, credit access, and adverse selection: Evidence from Kenya* (NBER Working Paper No. 22686). National Bureau of Economic Research. | Research paper | https://doi.org/10.3386/w22686 | Under a Kenyan SACCO's standard terms (one-third deposit plus two-thirds guarantors), only 2.4% of farmers took a loan. When the same loan could be collateralised by the purchased asset, take-up rose to 41.9%, with no repossessions at 75% asset collateral and only 0.7% at 96%. | Guarantor-heavy requirements can exclude creditworthy borrowers. SACCOs need better collateral/guarantee coverage tracking and alternative coverage rules instead of blanket guarantor demands. |
-| 2 | Mazimpaka, R., Nizeyimana, P., Kumar, K., Mukwende, P., & Nshimiyimana, J. (2025). Loan risk assessment for Umurenge SACCO using machine learning. *International Journal of Innovative Science and Research Technology*. | Research paper | https://ijisrt.com/assets/upload/files/IJISRT25AUG218.pdf | Using 2,000 anonymised loan-application records from the Rwanda Cooperative Agency (2020–2022), XGBoost reached 89.5% accuracy; credit score, past repayment behaviour, and monthly income were the strongest default predictors. | The study produces a predictive model, not an operational database that enforces collateral/guarantee rules, monitors exposure, or audits rejected approvals. |
-| 3 | Omondi Nyayiera, K., & Muchiri, R. (2023). Effect of loan management practices on non-performing loans for deposit taking savings and credit cooperative societies in Kenya. *International Journal of Current Aspects in Finance, Banking and Accounting, 5*(3), 14–28. | Research paper | https://doi.org/10.35942/4fjhrg83 | Across 44 deposit-taking SACCOs in Nairobi County, credit scoring, guarantorship requirements, and repayment enforcement had a negative but statistically insignificant effect on non-performing loans; the authors call for stronger, SACCO-specific NPL frameworks. | Guarantor requirements alone do not solve NPLs. SACCOs need integrated monitoring of guarantee coverage, exposure concentration, and repayment behaviour rather than standalone policies. |
-| 4 | FSD Kenya. (2025). *SACCO sub-sector report: Lessons from FinAccess surveys*. Financial Sector Deepening Kenya. | Report / statistic | https://www.fsdkenya.org/wp-content/uploads/2026/01/SACCO-Subsector-Report-Lessons-from-FinAccess-Surveys.pdf | Kenya had 356 regulated SACCOs, Kshs 1.08 trillion in assets, and 7.39 million members in 2024. Guarantors are the most common collateral: their use rose from 42.76% in 2019 to 53.52% in 2024. 75.1% of members who reported a financial loss blamed internal fraud. | Heavy reliance on guarantors coexists with fraud and transparency weaknesses. SACCOs need systematic guarantee registers, coverage checks, and auditable approval trails. |
-| 5 | Hermanns, B., Johnson, I., Weißer, S., & Winkler, F. (2017). *Improving on non-performing loans in the microfinance sector of Rwanda*. Sparkassenstiftung für internationale Kooperation. | Report / study (Rwanda context) | https://www.sparkassenstiftung.de/fileadmin/Sparkassenstiftung/downloads/Schriftenreihe/Rwanda_Masterthesis2017_Hermanns_Weisser_Johnson_Winkler_nonperforming_loans_RW.pdf | Rwanda's microfinance NPL ratio was above 10% (up to 46%) against the National Bank of Rwanda's 5% target. The study identifies weak staff/client education, non-standard loan processes, and the absence of core banking and fraud-proof collateral evaluation as structural shortfalls. | Manual, non-standard collateral evaluation and weak systemisation are major causes of NPLs. A database that standardises collateral/guarantee checks and records decisions directly addresses this gap. |
-| 6 | SaccoWorks. (n.d.). *Features: FOSA, BOSA & loan management modules*. eLivecode Solutions Limited. | Existing system | https://saccoworks.co.ke/features/ | A commercial SACCO platform advertises guarantor management, collateral valuation, lien management, arrears tracking, and KPI dashboards. | It is a commercial full-suite product. The public feature list does not show database-level enforcement of guarantee coverage thresholds or an open, auditable PL/SQL rule layer that a small SACCO can adapt. |
-| 7 | Wanyonyi, M. (2026). *SACCO loan data for women entrepreneurs in Kenya (2015–2025)* [Data set]. Zenodo. | Dataset | https://doi.org/10.5281/zenodo.18912903 | 4,850 anonymised SACCO loan records from women-owned micro-enterprises in Kenya (2015–2025), licensed CC BY 4.0. The workbook includes loan amount, collateral type, savings balance, credit history, group characteristics, default status, and days past due. | The file records collateral type but not guarantor identities or pledged amounts, so the project must model guarantee coverage at loan level and use savings balance as the pledge proxy. Missing values (notably 1,226 blank collateral-type cells) must be handled in Phase II. |
-| 8 | Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. | Technical source | https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html | Oracle triggers are stored PL/SQL units that fire automatically when specified DML events occur. They can enforce complex business rules and security checks inside the database. | Not a gap: this is the technical basis. The project will use `BEFORE INSERT/UPDATE` triggers to block loans whose guarantee/collateral coverage falls below policy and to write audit records. |
+| 1 | Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. | Research paper | https://doi.org/10.1016/j.dss.2014.03.001 | Uses 41,188 records from a Portuguese bank's telephone campaigns (May 2008–November 2010) and shows that customer, campaign, and economic variables can predict term-deposit subscription. Call duration, previous campaign outcome, and economic indicators are strong predictors. | The study is a predictive modelling exercise. It does not provide an operational database that enforces consent, contact-frequency limits, or permitted contact windows, nor an auditable contact log. |
+| 2 | Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). | Research paper | https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en | Conversion falls from 13.19% for customers receiving 1–2 calls to 10.34% for 3–4 calls and 6.41% for 5 or more calls. The authors recommend two calls as a practical operational limit for most customers and a third call only for high-probability prospects. | Banks need a database-level frequency cap and a record of blocked over-contact attempts. A prediction model alone does not enforce the limit or preserve an audit trail. |
+| 3 | Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. | Research paper | https://doi.org/10.5120/14852-3218 | Compares MLPNN, TAN, logistic regression, and C5.0 on real bank deposit-subscription data. The models can identify the customer characteristics that affect campaign success. | The focus is on comparing classifiers, not on operational campaign governance. The paper does not model consent, contact windows, frequency policies, or audit requirements. |
+| 4 | European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. | Report / regulatory guideline | https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en | Consent must be freely given, specific, informed, and unambiguous. Silence, pre-ticked boxes, and inactivity do not constitute consent, and consent can be withdrawn. | Banks need a database-level consent register and an audit trail that can prove when consent was given, for which channel, and when it was withdrawn. |
+| 5 | World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. | Report / statistic | https://www.worldbank.org/en/publication/globalfindex | 76% of adults worldwide had an account in 2021, up from 68% in 2017; in Sub-Saharan Africa, 55% of adults had an account, with mobile money driving much of the growth. | As account ownership and outreach grow, banks run more outbound campaigns. This increases the risk of non-compliant contact and makes a consent/frequency audit system more important. |
+| 6 | Salesforce. (n.d.). *Financial Services Cloud*. | Existing system | https://www.salesforce.com/financialservices/ | A commercial banking CRM that provides customer profiles, campaign management, consent/preference features, and analytics. | It is a proprietary full-suite platform. Public materials do not expose a small, open, database-level PL/SQL rule layer that a small bank or a student project can inspect, adapt, and audit. |
+| 7 | Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. | Dataset | https://doi.org/10.24432/C5K306 | 41,188 anonymised records and 20 input features from a Portuguese bank's phone campaigns, including customer demographics, contact channel, campaign contacts, previous outcomes, and economic indicators. Licensed CC BY 4.0. | The dataset has no customer IDs, exact dates, or consent flags. The project must derive surrogate customer IDs and a chronological contact sequence, and add consent/policy tables with a documented simulation for Phase II. |
+| 8 | Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. | Technical source | https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html | Oracle triggers are stored PL/SQL units that fire automatically on specified DML events. They can enforce complex business rules and security checks inside the database. | Not a gap: this is the technical basis. The project will use `BEFORE INSERT` triggers on contact attempts to enforce consent, frequency caps, and contact windows, and to write audit records. |
 
 ## Source mix check
 
@@ -39,44 +39,50 @@
 
 ## Dataset audit note
 
-I downloaded and inspected the dataset (`data/sacco_loan.xlsx`) on 6 November 2026.
+I downloaded and inspected the UCI Bank Marketing dataset on 6 November 2026. The file used is `bank-additional-full.csv` from `bank-additional.zip`.
 
-- **Size:** 4,850 data rows × 33 columns (908 KB).
+- **Size:** 41,188 data rows × 21 columns (5.8 MB).
 - **Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0).
-- **Target variable:** `Loan_Default_Status` — 4,000 defaulted (1) and 850 non-defaulted (0), an 82.5% default rate.
-- **Collateral types:** Guarantor = 1,263; Group Guarantee = 1,190; Land = 1,171; blank = 1,226 (25.3%).
-- **Other missing values:** `Education_Level` has 499 blanks.
-- **Useful fields for this project:** `Loan_Amount_KES`, `Savings_Balance_KES`, `Savings_Rate_KES`, `Loan_Term_Months`, `Interest_Rate`, `Credit_History`, `Previous_Loans_Count`, `Collateral_Type`, `Group_Size`, `Group_Composition`, `Sanction_Strength`, `Days_Past_Due`, `Loan_Default_Status`.
-- **Data-quality note:** The Zenodo description lists 36 variables, but the downloaded workbook has 33 columns; for example, `Group_Composition` and `Sanction_Strength` appear in the file instead of the described `Group_Cohesion_Score` and `Peer_Pressure_Index`. The codebook must be reconciled before Phase II.
-- **No personal identifiers** were found (no names, phone numbers, or ID numbers).
+- **Period:** May 2008–November 2010, ordered by contact date.
+- **Target variable:** `y` — 4,640 subscribed (11.3%) and 36,548 did not subscribe (88.7%). This is an imbalanced target.
+- **Unknown values:** `default` 8,597; `education` 1,731; `housing` 990; `loan` 990; `job` 330; `marital` 80. "unknown" is the missing-value marker; there are no blank cells.
+- **Contact channel:** cellular 26,144; telephone 15,044.
+- **Current-campaign contacts:** minimum 1, maximum 56, average 2.57; 7,635 records have more than 3 contacts and 3,385 have more than 5.
+- **Useful fields for this project:** `age`, `job`, `marital`, `education`, `default`, `housing`, `loan`, `contact`, `month`, `day_of_week`, `duration`, `campaign`, `pdays`, `previous`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`, `euribor3m`, `nr.employed`, `y`.
+- **Leakage note:** `duration` is known only after the call, so it must not be used to decide whether a customer may be contacted. It will be used only for post-call analysis.
+- **No personal identifiers** were found (no names, phone numbers, or national ID numbers).
+- **Limitations:** no customer ID, exact date, or consent flag. In Phase II I will assign a surrogate `customer_id` to each record, reconstruct a chronological contact sequence from the file order and the month column, and create a `consent` table seeded with documented simulated consent values for demonstration.
 
 ## Search trail
 
-The sources above were found through Google Scholar/general web search and verified by opening the source pages or PDFs:
+The sources above were found through Google Scholar and general web search, then verified by opening the source pages or PDFs:
 
-- `SACCO loan repayment delinquency research paper Rwanda Kenya microfinance`
-- `guarantor collateral risk SACCO microcredit research paper`
-- `SACCO loan dataset Kaggle microfinance loan records`
-- `existing SACCO management system software features`
-- `SACCO Sub-Sector Report Lessons from FinAccess Surveys`
+- `bank telemarketing conversion contact frequency research paper`
+- `bank telemarketing contact fatigue optimal contact threshold`
+- `UCI Bank Marketing dataset 222`
+- `GDPR consent marketing guidelines EDPB`
+- `World Bank Global Findex 2021 account ownership`
+- `existing bank CRM campaign consent management features`
 - `Oracle Database 19c Using Triggers documentation`
 
 ## Problem justification (synthesis)
 
-The evidence points to one practical gap: SACCOs depend on guarantors and collateral, but the check is often manual, inconsistent, and poorly recorded. Existing studies measure default risk or evaluate credit policy, and commercial SACCO systems advertise guarantor and collateral modules, but there is little evidence of a small, open, database-level rule engine that (a) computes guarantee/collateral coverage for each loan, (b) blocks approvals below a policy threshold, and (c) keeps an auditable trail of every decision. SCGEM addresses that gap with Oracle PL/SQL procedures, functions, cursors, packages, triggers, and an audit log, plus a live dashboard for credit officers.
+The evidence points to a practical gap. Bank telemarketing can predict which customers are likely to subscribe, but prediction is not enough: repeated calls quickly reduce conversion, and regulators require explicit, withdrawable consent. Existing commercial CRM suites offer campaign and consent features, but they are large proprietary products. There is little evidence of a small, open, database-level rule engine that (a) checks consent and contact policy before a call, (b) enforces a frequency cap and permitted contact window, (c) blocks and logs non-compliant attempts, and (d) keeps an auditable trail. CampaignGuard addresses that gap with Oracle PL/SQL functions, procedures, cursors, packages, triggers, and an audit log, plus a live Power BI dashboard for campaign managers.
 
 ## Full APA references
 
-Hermanns, B., Johnson, I., Weißer, S., & Winkler, F. (2017). *Improving on non-performing loans in the microfinance sector of Rwanda*. Sparkassenstiftung für internationale Kooperation. https://www.sparkassenstiftung.de/fileadmin/Sparkassenstiftung/downloads/Schriftenreihe/Rwanda_Masterthesis2017_Hermanns_Weisser_Johnson_Winkler_nonperforming_loans_RW.pdf
+Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en
 
-Jack, W., Kremer, M., de Laat, J., & Suri, T. (2016). *Borrowing requirements, credit access, and adverse selection: Evidence from Kenya* (NBER Working Paper No. 22686). National Bureau of Economic Research. https://doi.org/10.3386/w22686
+Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. https://doi.org/10.5120/14852-3218
 
-Mazimpaka, R., Nizeyimana, P., Kumar, K., Mukwende, P., & Nshimiyimana, J. (2025). Loan risk assessment for Umurenge SACCO using machine learning. *International Journal of Innovative Science and Research Technology*. https://ijisrt.com/assets/upload/files/IJISRT25AUG218.pdf
+European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en
 
-Omondi Nyayiera, K., & Muchiri, R. (2023). Effect of loan management practices on non-performing loans for deposit taking savings and credit cooperative societies in Kenya. *International Journal of Current Aspects in Finance, Banking and Accounting, 5*(3), 14–28. https://doi.org/10.35942/4fjhrg83
+Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. https://doi.org/10.1016/j.dss.2014.03.001
+
+Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306
 
 Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html
 
-SaccoWorks. (n.d.). *Features: FOSA, BOSA & loan management modules*. eLivecode Solutions Limited. https://saccoworks.co.ke/features/
+Salesforce. (n.d.). *Financial Services Cloud*. https://www.salesforce.com/financialservices/
 
-Wanyonyi, M. (2026). *SACCO loan data for women entrepreneurs in Kenya (2015–2025)* [Data set]. Zenodo. https://doi.org/10.5281/zenodo.18912903
+World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. https://www.worldbank.org/en/publication/globalfindex

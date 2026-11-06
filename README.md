@@ -1,4 +1,4 @@
-# SACCO Collateral and Guarantor Exposure Monitor (SCGEM)
+# CampaignGuard — Bank Campaign Contact Compliance and Conversion Tracker
 
 **Student:** BYISHIMO NGOGA Blaise — **29359**  
 **Course:** INSY 8311 — Database Development with PL/SQL  
@@ -8,32 +8,35 @@
 
 ## Problem statement
 
-SACCOs rely heavily on guarantors and collateral to secure member loans, but coverage is often tracked in spreadsheets, paper files, or not at all. Credit officers cannot easily see whether a loan is adequately covered, whether a guarantor is over-exposed, or why an approval was rejected. This project will build an Oracle database with PL/SQL rules that compute guarantee and collateral coverage, block under-covered loan approvals, and log every decision for audit.
+Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. CampaignGuard will be an Oracle database with PL/SQL rules that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance by customer segment.
 
 ## Objectives
 
-**Main objective:** Design and implement an Oracle database with PL/SQL that monitors SACCO loan collateral and guarantee coverage and enforces coverage rules.
+**Main objective:** Design and implement an Oracle database with PL/SQL that enforces bank campaign contact compliance and tracks conversion performance.
 
 **Specific objectives:**
 
-1. Model SACCO members, loans, collateral, guarantee exposure, repayments, risk assessments, and audit events in third normal form (3NF).
-2. Load and validate the real SACCO loan dataset, resolving missing and inconsistent values.
-3. Develop PL/SQL functions, procedures, cursors, packages, and triggers that compute coverage ratios, classify loan risk, block under-covered approvals, and write audit records.
-4. Build a live Power BI dashboard connected to Oracle views that show guarantee coverage, default rates by collateral type, and high-risk/under-covered loans.
+1. Model customers, campaigns, consent, contact attempts, conversions, contact policies, and audit events in third normal form (3NF).
+2. Load and validate the UCI Bank Marketing dataset, handle "unknown" values, derive surrogate customer IDs, and reconstruct a chronological contact sequence.
+3. Develop PL/SQL functions, procedures, cursors, packages, and triggers that check consent, enforce frequency caps and permitted contact windows, block non-compliant attempts, and write audit records.
+4. Build a live Power BI dashboard connected to Oracle views that shows conversion rates by segment, contact frequency, blocked attempts, and consent status.
 5. Document the system and demonstrate it live in the final presentation.
 
 ## Data source
 
-- **Dataset:** *SACCO Loan Data for Women Entrepreneurs in Kenya (2015–2025)*
-- **Author:** Maurice Wanyonyi (2026)
-- **Repository:** Zenodo — https://doi.org/10.5281/zenodo.18912903
+- **Dataset:** *Bank Marketing*
+- **Authors:** Sérgio Moro, Paulo Rita, and Paulo Cortez (2014)
+- **Repository:** UCI Machine Learning Repository — https://doi.org/10.24432/C5K306
+- **File used:** `bank-additional-full.csv` from `bank-additional.zip`
 - **Licence:** Creative Commons Attribution 4.0 International (CC BY 4.0)
-- **Size:** 4,850 anonymised loan records × 33 columns
-- **Key fields:** `Loan_Amount_KES`, `Savings_Balance_KES`, `Collateral_Type`, `Credit_History`, `Loan_Default_Status`, `Days_Past_Due`, `Group_Size`, `Group_Composition`, `Sanction_Strength`
-- **Local copy:** `data/sacco_loan.xlsx`
-- **Privacy:** no names, phone numbers, or national IDs are included.
+- **Size:** 41,188 anonymised records × 21 columns
+- **Period:** May 2008–November 2010, ordered by contact date
+- **Target:** `y` — 4,640 subscribed (11.3%) and 36,548 did not subscribe (88.7%)
+- **Key fields:** `age`, `job`, `marital`, `education`, `default`, `housing`, `loan`, `contact`, `month`, `day_of_week`, `duration`, `campaign`, `pdays`, `previous`, `poutcome`, `emp.var.rate`, `cons.price.idx`, `cons.conf.idx`, `euribor3m`, `nr.employed`, `y`
+- **Privacy:** no names, phone numbers, or national ID numbers are present.
+- **Local copy:** `data/bank-additional-full.csv`
 
-The dataset audit is documented in `docs/research/research_log.md`. It notes 1,226 blank `Collateral_Type` values and 499 blank `Education_Level` values that must be cleaned in Phase II.
+The dataset has no customer IDs, exact dates, or consent flags. In Phase II I will assign a surrogate `customer_id` to each record, reconstruct a chronological contact sequence from the file order and the month column, and create a `consent` table seeded with documented simulated consent values for demonstration. The `duration` field is known only after a call, so it will not be used to decide whether a customer may be contacted.
 
 ## Innovation
 
@@ -42,10 +45,11 @@ The dataset audit is documented in `docs/research/research_log.md`. It notes 1,2
 
 Power BI will read Oracle views backed by PL/SQL functions and show:
 
-- guarantee and collateral coverage per loan;
-- default rates by collateral type;
-- high-risk and under-covered loans;
-- trends by county, business sector, and loan purpose.
+- conversion rate by job, education, channel, and contact frequency;
+- customers contacted above the policy limit;
+- blocked attempts by reason (no consent, frequency cap, outside window);
+- campaign performance over time and by customer segment;
+- consent status and withdrawal trends.
 
 Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
@@ -53,39 +57,43 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 | Table | Purpose |
 |---|---|
-| `members` | Anonymised SACCO member and business profile. |
-| `loans` | Loan amount, term, interest, purpose, status, days past due, and default outcome. |
-| `collateral` | Collateral type, estimated value, valuation date, and coverage ratio per loan. |
-| `guarantee_exposure` | Guarantee type (individual/group), guaranteed amount, savings pledged, and coverage ratio. |
-| `repayments` | Scheduled and actual repayments, due dates, and arrears status. |
-| `risk_assessments` | Computed risk score, risk band, coverage ratio, assessment date, and officer. |
-| `audit_log` | Every approval, rejection, change, and denied action with user, timestamp, and reason. |
-| `collateral_types` | Lookup table for collateral categories. |
-| `loan_statuses` | Lookup table for loan lifecycle states. |
-| `credit_history_levels` | Lookup table for credit-history ratings. |
+| `customers` | Anonymised customer profile and contact preferences. |
+| `campaigns` | Campaign name, product, dates, target segment, status, and contact policy. |
+| `consent` | Customer consent per channel, consent date, source, expiry date, and withdrawal date. |
+| `contact_attempts` | Every attempted contact, channel, timestamp, outcome, duration, blocked flag, and block reason. |
+| `conversions` | Term-deposit subscription outcome linked to the successful contact attempt. |
+| `contact_policies` | Maximum contacts per day/week, permitted contact window, and channel rules. |
+| `market_conditions` | Economic indicators by period for campaign timing analysis. |
+| `audit_log` | Every consent change, blocked attempt, approval, and sensitive update with user, timestamp, and reason. |
+| `jobs` | Lookup table for occupation categories. |
+| `education_levels` | Lookup table for education categories. |
+| `contact_channels` | Lookup table for cellular, telephone, and other channels. |
+| `campaign_outcomes` | Lookup table for contact and conversion outcomes. |
 
 ### Key relationships
 
-- One `member` has many `loans`.
-- One `loan` has one or more `collateral` and `guarantee_exposure` records.
-- One `loan` has many `repayments` and many `risk_assessments`.
-- `audit_log` records changes to loans, collateral, guarantees, and risk assessments.
+- One `customer` has many `consent` records and many `contact_attempts`.
+- One `campaign` has many `contact_attempts` and many `conversions`.
+- One successful `contact_attempt` can produce one `conversion`.
+- `contact_policies` are applied by channel and campaign.
+- `audit_log` records changes to consent, contact attempts, and conversions.
 
 ## Planned PL/SQL features
 
 | Feature | Planned use |
 |---|---|
-| Function `fn_coverage_ratio` | Returns `(savings pledged + collateral value) / loan amount` for a loan. |
-| Function `fn_risk_score` | Scores a loan using coverage, credit history, days past due, previous loans, and loan-to-savings ratio. |
-| Procedure `prc_register_loan` | Validates and inserts a loan with its collateral and guarantee exposure. |
-| Procedure `prc_assess_loan` | Computes coverage and risk, then writes a `risk_assessments` row. |
-| Procedure `prc_approve_loan` | Approves only if coverage meets policy; otherwise raises a custom exception and logs the denial. |
-| Cursor `cur_undercovered_loans` | Lists loans below the coverage threshold for follow-up. |
-| Package `pkg_loan_risk` | Groups the coverage, scoring, assessment, and approval logic. |
-| Trigger `trg_loan_coverage_guard` | `BEFORE INSERT OR UPDATE` trigger that blocks under-covered loans. |
-| Trigger `trg_audit_*` | Writes `audit_log` entries for approvals, rejections, and sensitive changes. |
-| Views `vw_loan_coverage`, `vw_default_by_collateral`, `vw_high_risk_loans` | Feed the Power BI dashboard. |
-| Exception handling | Custom errors for missing collateral, insufficient coverage, and invalid loan states. |
+| Function `fn_contacts_last_n_days` | Counts a customer's contacts in the last 1, 7, or 30 days by channel. |
+| Function `fn_is_contact_allowed` | Returns an allowed/blocked status with a reason after checking consent, frequency cap, contact window, and campaign status. |
+| Procedure `prc_set_consent` | Records consent, renewal, or withdrawal and writes an audit entry. |
+| Procedure `prc_log_contact_attempt` | Calls the compliance check, inserts the attempt, or stores a blocked attempt with a reason. |
+| Procedure `prc_record_conversion` | Records a successful subscription and updates campaign metrics. |
+| Cursor `cur_high_frequency_customers` | Lists customers contacted above the policy threshold for review. |
+| Package `pkg_campaign_compliance` | Groups the consent, frequency, window, and conversion logic. |
+| Trigger `trg_contact_attempt_guard` | `BEFORE INSERT` trigger that blocks non-compliant contact attempts. |
+| Trigger `trg_audit_consent` | Logs every consent insert, update, and withdrawal. |
+| Views `vw_campaign_conversion`, `vw_blocked_attempts`, `vw_contact_frequency`, `vw_consent_status` | Feed the Power BI dashboard. |
+| Exception handling | Custom errors for missing consent, frequency-cap breach, outside-window contact, and closed campaign. |
+| Scheduler job | Expires consents and refreshes campaign summary views nightly. |
 
 ## Repository structure
 
@@ -94,7 +102,7 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 ├── README.md
 ├── data/
 │   ├── README.md
-│   └── sacco_loan.xlsx
+│   └── bank-additional-full.csv
 ├── docs/
 │   ├── proposal/
 │   │   └── registration_row.md
@@ -106,7 +114,7 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 ## Phase 0 checklist
 
-- [x] Topic selected in the banking/SACCO area.
+- [x] Topic selected in the banking/finance area.
 - [x] At least 6 credible sources, including a dataset.
 - [x] Real dataset downloaded and audited.
 - [ ] Topic registered on the instructor's Google Sheet.
@@ -116,16 +124,18 @@ Business rules remain in PL/SQL; Power BI only displays and filters the results.
 
 ## References
 
-Hermanns, B., Johnson, I., Weißer, S., & Winkler, F. (2017). *Improving on non-performing loans in the microfinance sector of Rwanda*. Sparkassenstiftung für internationale Kooperation. https://www.sparkassenstiftung.de/fileadmin/Sparkassenstiftung/downloads/Schriftenreihe/Rwanda_Masterthesis2017_Hermanns_Weisser_Johnson_Winkler_nonperforming_loans_RW.pdf
+Dadras, P., & Hoseini, S. S. (2026). Identifying contact fatigue and determining the optimal contact threshold in bank telemarketing campaigns using machine learning and model interpretability. *Journal of Advertising and Sales Management, 7*(2). https://asm.pgu.ac.ir/article_741761_6ad967dfb077c5a720de2174dcc646c8.pdf?lang=en
 
-Jack, W., Kremer, M., de Laat, J., & Suri, T. (2016). *Borrowing requirements, credit access, and adverse selection: Evidence from Kenya* (NBER Working Paper No. 22686). National Bureau of Economic Research. https://doi.org/10.3386/w22686
+Elsalamony, H. A. (2014). Bank direct marketing analysis of data mining techniques. *International Journal of Computer Applications, 85*(7), 12–22. https://doi.org/10.5120/14852-3218
 
-Mazimpaka, R., Nizeyimana, P., Kumar, K., Mukwende, P., & Nshimiyimana, J. (2025). Loan risk assessment for Umurenge SACCO using machine learning. *International Journal of Innovative Science and Research Technology*. https://ijisrt.com/assets/upload/files/IJISRT25AUG218.pdf
+European Data Protection Board. (2020). *Guidelines 05/2020 on consent under Regulation 2016/679*. https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en
 
-Omondi Nyayiera, K., & Muchiri, R. (2023). Effect of loan management practices on non-performing loans for deposit taking savings and credit cooperative societies in Kenya. *International Journal of Current Aspects in Finance, Banking and Accounting, 5*(3), 14–28. https://doi.org/10.35942/4fjhrg83
+Moro, S., Cortez, P., & Rita, P. (2014). A data-driven approach to predict the success of bank telemarketing. *Decision Support Systems, 62*, 22–31. https://doi.org/10.1016/j.dss.2014.03.001
+
+Moro, S., Rita, P., & Cortez, P. (2014). *Bank marketing* [Data set]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306
 
 Oracle. (n.d.). *Using triggers*. Oracle Database 19c Development Guide. https://docs.oracle.com/en/database/oracle/oracle-database/19/tdddg/using-triggers.html
 
-SaccoWorks. (n.d.). *Features: FOSA, BOSA & loan management modules*. eLivecode Solutions Limited. https://saccoworks.co.ke/features/
+Salesforce. (n.d.). *Financial Services Cloud*. https://www.salesforce.com/financialservices/
 
-Wanyonyi, M. (2026). *SACCO loan data for women entrepreneurs in Kenya (2015–2025)* [Data set]. Zenodo. https://doi.org/10.5281/zenodo.18912903
+World Bank. (2022). *Global Findex Database 2021: Financial inclusion, digital payments, and resilience in the age of COVID-19*. https://www.worldbank.org/en/publication/globalfindex

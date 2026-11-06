@@ -2,7 +2,7 @@
 
 This folder will hold the Phase 0 presentation (10–12 slides) and the final Phase VII presentation.
 
-Planned Phase 0 slide map:
+Planned Phase 0 slide map for **CampaignGuard**:
 
 1. Title, student name and ID, course, instructor, GitHub link
 2. Background and problem

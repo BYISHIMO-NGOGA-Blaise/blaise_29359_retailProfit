@@ -10,26 +10,26 @@ The screenshots show the **Final Practicum Project - PL/SQL (Topic Selection)** 
 | Student ID | `29359` |
 | Full name | `BYISHIMO NGOGA Blaise` |
 | Date registered | Leave blank — automatic |
-| Domain | `Banking and Financial Services` |
-| Project title | `SACCO Collateral and Guarantor Exposure Monitor (SCGEM)` |
-| Project description | `SACCOs rely on guarantors and collateral to secure member loans, but coverage is often tracked manually, making under-covered and over-exposed loans hard to detect. This project will build an Oracle database with PL/SQL procedures and triggers that record members, loans, collateral, guarantees, and repayments, compute coverage ratios, block approvals below policy, and keep an audit log. A live dashboard will show under-covered loans, default rates by collateral type, and high-risk borrowers for credit officers.` |
-| Data source (link) | `https://zenodo.org/records/18912903` |
+| Domain | `Banking and Finance` |
+| Project title | `CampaignGuard: Bank Campaign Contact Compliance and Conversion Tracker` |
+| Project description | `Banks run outbound telemarketing campaigns for deposits and loans, but contact history, consent, and frequency limits are often scattered across spreadsheets and CRM notes. This causes over-contact, calls outside permitted windows, missing consent records, and weak conversion analysis. This project will build an Oracle database with PL/SQL functions, procedures, and triggers that record customers, campaigns, consent, and every contact attempt; block and log non-compliant attempts; and show conversion performance on a live dashboard.` |
+| Data source (link) | `https://doi.org/10.24432/C5K306` |
 | Planned innovation | `Analytics dashboard (Power BI) connected live to the Oracle database` |
-| 3 keywords | `SACCO, collateral, guarantor` |
-| GitHub repository link | `https://github.com/BYISHIMO-NGOGA-Blaise/blaise_29359_saccoGuard` |
+| 3 keywords | `bank campaign, consent, contact frequency` |
+| GitHub repository link | `https://github.com/BYISHIMO-NGOGA-Blaise/blaise_29359_campaignGuard` |
 
 ## Before pasting
 
 1. Read the **Instructions** tab.
-2. Check all four group tabs for `SACCO`, `collateral`, and `guarantor` to confirm the idea is not already taken.
+2. Check all four group tabs for `bank campaign`, `consent`, `telemarketing`, and `contact frequency` to confirm the idea is not already taken.
 3. Enter the row in **MONDAY GRP I**, first empty row only.
 4. Type your **Gmail first**; the sheet may use it to auto-fill the date.
-5. Create the GitHub repository **before** pasting the link. Name it `blaise_29359_saccoGuard`, make it public, and paste the URL.
+5. Create the GitHub repository **before** pasting the link. Name it `blaise_29359_campaignGuard`, make it public, and paste the URL.
 6. Do not edit another student's row.
 
 ## Repository name
 
-`blaise_29359_saccoGuard`
+`blaise_29359_campaignGuard`
 
 ## Deadline
 
