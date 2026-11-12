@@ -21,7 +21,7 @@ The project uses the public Supermarket Sales dataset from Kaggle. It contains t
 
 ## Data source
 
-Fares Ashraf's [Supermarket Sales Dataset on Kaggle](https://www.kaggle.com/datasets/faresashraf1001/supermarket-sales) (Version 2; Apache 2.0 license). Kaggle sign-in may be required to download it. Dataset handling details are in [data/README.md](data/README.md).
+Fares Ashraf's [Supermarket Sales Dataset on Kaggle](https://www.kaggle.com/datasets/faresashraf1001/supermarket-sales) (Version 2; Apache 2.0 license). The downloaded CSV contains 1,000 rows and 17 columns and is included at [data/SuperMarket Analysis.csv](data/SuperMarket%20Analysis.csv). Attribution, licensing, and handling details are in [data/README.md](data/README.md).
 
 ## Planned database objects
 
