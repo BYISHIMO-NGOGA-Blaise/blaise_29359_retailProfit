@@ -1,17 +1,12 @@
-# Office temporary files
-~$*
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Python
-__pycache__/
-*.pyc
-.venv/
-
-# Local environment and secrets
+# Local environment and generated files
 .env
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+Thumbs.db
+.DS_Store
 
-# Legacy working file retained locally
-data/sacco_loan.xlsx
+# Power BI backup / temporary files
+*.pbix.autosave
+*.pbit.autosave
