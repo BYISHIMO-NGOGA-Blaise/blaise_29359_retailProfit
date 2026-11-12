@@ -14,4 +14,4 @@
 
 - The dataset license and compact download were checked on the Kaggle listing. Kaggle sign-in may be needed for download.
 - The project will report gross-profit measures available in the source. It will not claim inventory-on-hand or discount analysis because those fields are absent. Validate the fixed source margin field before presenting margin comparisons.
-- This log summarizes the linked papers' abstracts and the linked documentation pages; read the full sources before final submission and update the findings if needed.
+- The paper summaries are based on their abstracts; findings for the other sources are based on the linked dataset listing and documentation pages.

@@ -21,7 +21,7 @@ The project uses the public Supermarket Sales dataset from Kaggle. It contains t
 
 ## Data source
 
-Fares Ashraf's [Supermarket Sales Dataset on Kaggle](https://www.kaggle.com/datasets/faresashraf1001/supermarket-sales) (Version 2; Apache 2.0 license). Kaggle sign-in may be required to download it. See [data/README.md](data/README.md) for handling instructions.
+Fares Ashraf's [Supermarket Sales Dataset on Kaggle](https://www.kaggle.com/datasets/faresashraf1001/supermarket-sales) (Version 2; Apache 2.0 license). Kaggle sign-in may be required to download it. Dataset handling details are in [data/README.md](data/README.md).
 
 ## Planned database objects
 
@@ -56,6 +56,4 @@ An interactive Power BI dashboard will connect to Oracle 21c and present sales t
 
 ## References
 
-See the [research log](docs/research/research_log.md) for the sources reviewed and the project-specific findings and gaps.
-
-Before registering, compare the proposed topic against entries in all four group tabs of the registration sheet and confirm the automatic check says OK.
+The [research log](docs/research/research_log.md) lists the sources reviewed and the project-specific findings and gaps.

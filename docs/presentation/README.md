@@ -1,6 +1,6 @@
 # Phase 0 presentation outline
 
-Prepare a 10–12 slide presentation from this outline. Add the GitHub link and representative sample records after downloading the dataset.
+Proposed 10–12 slide structure for presenting the project, from its motivation and research gap to the planned database, implementation approach, and expected results.
 
 1. **Title** — Project title, student name and ID, course, instructor, and GitHub link.
 2. **Background and problem** — Why retailers need to monitor sales and gross profitability across branches and product lines.
