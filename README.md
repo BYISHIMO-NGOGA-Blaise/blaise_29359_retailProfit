@@ -54,6 +54,15 @@ An interactive Power BI dashboard will connect to Oracle 21c and present sales t
 - [Research log](docs/research/research_log.md)
 - [Presentation outline](docs/presentation/README.md)
 
+## Phase II deliverables
+
+- Raw data copy: [data/raw/SuperMarket Analysis.csv](data/raw/SuperMarket%20Analysis.csv)
+- Dataset card: [data/dataset_card.md](data/dataset_card.md)
+- Normalization notes: [docs/design/normalization.md](docs/design/normalization.md)
+- Data dictionary: [docs/design/data_dictionary.md](docs/design/data_dictionary.md)
+- ERD: [docs/design/erd.png](docs/design/erd.png)
+- Five-minute class walkthrough: [docs/design/phase2_walkthrough.md](docs/design/phase2_walkthrough.md)
+
 ## References
 
 The [research log](docs/research/research_log.md) lists the sources reviewed and the project-specific findings and gaps.
