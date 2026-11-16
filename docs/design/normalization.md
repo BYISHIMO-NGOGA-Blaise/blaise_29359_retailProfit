@@ -4,7 +4,7 @@
 
 The source is `data/raw/SuperMarket Analysis.csv`: 1,000 records and 17 fields. One source record represents one transaction/invoice and its one recorded product-line category and financial measures. The invoice ID is unique in this file. The source does not identify individual products or customers, and this design does not invent either identifier.
 
-The eight-table logical design below separates transaction data from repeated reference values, and separates branch from city because the source shows that each branch maps to one city.
+The seven-table logical design below separates transaction data from repeated reference values, and separates branch from city because the source shows that each branch maps to one city.
 
 ## 2. Unnormalized form (UNF): source as received
 

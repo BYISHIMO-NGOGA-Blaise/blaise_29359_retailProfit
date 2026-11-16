@@ -61,7 +61,7 @@ An interactive Power BI dashboard will connect to Oracle 21c and present sales t
 - Normalization notes: [docs/design/normalization.md](docs/design/normalization.md)
 - Data dictionary: [docs/design/data_dictionary.md](docs/design/data_dictionary.md)
 - ERD: [docs/design/erd.png](docs/design/erd.png)
-- Five-minute class walkthrough: [docs/design/phase2_walkthrough.md](docs/design/phase2_walkthrough.md)
+- Five-minute class presentation: [docs/design/phase2_walkthrough.pptx](docs/design/phase2_walkthrough.pptx)
 
 ## References
 
