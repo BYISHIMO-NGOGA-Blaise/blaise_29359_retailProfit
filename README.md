@@ -63,15 +63,6 @@ An interactive Power BI dashboard will connect to Oracle 21c and present sales t
 - ERD: [docs/design/erd.png](docs/design/erd.png)
 - Five-minute class presentation: [docs/design/phase2_walkthrough.pptx](docs/design/phase2_walkthrough.pptx)
 
-## Phase III database setup
-
-- Setup instructions and identifiers: [database/setup/README.md](database/setup/README.md)
-- Numbered Oracle scripts: [database/setup/](database/setup/)
-- Evidence checklist: [screenshots/README.md](screenshots/README.md)
-- Target PDB: `i_29359_blaise_retail_db`
-
-Scripts are prepared for the student's local Oracle 21c instance. They still need to be run locally, and real database verification output and screenshots added before Phase III is complete.
-
 ## References
 
 The [research log](docs/research/research_log.md) lists the sources reviewed and the project-specific findings and gaps.
